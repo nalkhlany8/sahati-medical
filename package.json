@@ -1,0 +1,20 @@
+{
+  "name": "sahati-medical-reports",
+  "version": "5.5.0",
+  "description": "Sahati Medical Center - Enterprise Edition: Document Verification System with permanent JSON DB, Arabic PDF rendering (Tajawal font), scheduled status lifecycle (cron), and international SMS gateway (Taqnyat/Twilio) with E.164 and UCS-2 encoding.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "4.21.2",
+    "qrcode": "1.5.4",
+    "pdfkit": "0.15.1"
+  },
+  "optionalDependencies": {
+    "twilio": "4.19.0"
+  }
+}
