@@ -1,52 +1,121 @@
-# مجلد الخطوط (Fonts Directory)
+# منصة مركز صحتي الطبية - نظام Document Verification Enterprise
+نظام احترافي لإصدار والتحقق من الوثائق الطبية الموقّعة إلكترونياً.
 
-**يجب** وضع ملفين هنا لتعمل اللغة العربية في PDF بشكل صحيح:
+## ✨ الميزات الرئيسية
 
-## ⚠️ لماذا هذا مهم؟
-PDFKit لا يحتوي على خطوط عربية افتراضية. إذا لم تضع خطوطاً هنا، سيظهر النص العربي في PDF على شكل مربعات □□□□.
+### 1. قالب PDF مؤسساتي (Enterprise Corporate PDF)
+- تنسيق جدول احترافي (حدود صريحة، شبكة collapse، ألوان `\#003366`).
+- توليد PDF تفاعلي مع روابط قابلة للنقر.
+- علامة مائية شفافة خلف المحتوى.
+- Header احترافي بشعار المستخدم + اسم المنشأة + بيانات اعتماد.
+- Footer رسمي مع QR Code + رابط التحقق + ختم سداسي.
+- ختم إلكتروني مولّد ديناميكياً (SVG).
+- **مهم**: لتعمل اللغة العربية بشكل صحيح في الـ PDF، يجب إضافة خط Tajawal.
 
-## الملفات المطلوبة:
+### 2. نظام Cron Job تلقائي لإدارة دورة حياة الحالة
+- تعمل مرة واحدة يومياً عند منتصف الليل.
+- تستعلم قاعدة البيانات عن الإجازات ذات الحالة `Active` التي انتهت صلاحيتها.
+- تحولهات من `Active` إلى `Expired` تلقائياً.
+- ترسل SMS إشعار للمريض في نفس الوقت.
 
-### 1. `Tajawal-Regular.ttf` (~330 KB)
-### 2. `Tajawal-Bold.ttf` (~330 KB)
+### 3. نظام إشعارات SMS دولي
+- دعم Taqnyat/Twilio/WhatsApp Business.
+- معالجة أرقام الهاتف بالصيغة الدولية E.164 اكتساباً.
+- ترميز UCS-2 للنصوص العربية (حد 70 حرف للرسالة الواحدة).
+- تتبع استجابة السيرفر عبر try/catch.
 
-## من أين تحصل عليها (مجاناً)؟
+### 4. صفحة التحقق المطورة
+- شارات حالة بلون أخضر/أحمر مع حركة نبض.
+- أزرار تحميل PDF تفاعلي + طباعة + عرض كامل.
+- QR Code قابل للمسح.
+- روابط تحقق قابلة للنقر.
 
-### الخيار 1: Google Fonts (الأسهل)
-1. اذهب إلى: **https://fonts.google.com/specimen/Tajawal**
-2. انقر على زر **"Download family"** بالأعلى
-3. استخرج ملف ZIP الذي يحتوي على جميع المتغيرات
-4. من داخل مجلد `static/`، انسخ ملفين فقط:
-   - `Tajawal-Regular.ttf`
-   - `Tajawal-Bold.ttf`
+## 🚀 خطوات النشر على Render.com
 
-### الخيار 2: GitHub مباشر
-1. اذهب إلى: **https://github.com/google/fonts/raw/main/ofl/tajawal/Tajawal-Regular.ttf**
-2. احفظ باسم `Tajawal-Regular.ttf`
-3. ثم: **https://github.com/google/fonts/raw/main/ofl/tajawal/Tajawal-Bold.ttf**
-4. احفظ باسم `Tajawal-Bold.ttf`
+### الخطوة 1: إنشاء مستودع GitHub
+1. اذهب إلى github.com وأنشئ مستودعاً جديداً (مثلاً `sahati-medical`)
+2. اتركه فارغاً (لا تختر README أو .gitignore - تلك موجودة في الحزمة)
 
-### الخيار 3: jsDelivr CDN
+### الخطوة 2: رفع الملفات
+ارفع هذه الملفات (من المجلد الذي فككت فيه الحزمة المضغوطة):
+
+| الملف/المجلد | ملاحظات |
+|--------------|---------|
+| `server.js` | الملف الرئيسي |
+| `package.json` | تعريف التبعيات |
+| `.env.example` | نموذج متغيرات البيئة |
+| `.gitignore` | تجاهل node_modules/ |
+| `README.md` | هذا الملف |
+| `fonts/` | **مجلد فارغ** - ستضع فيه ملفات الخطوط لاحقاً |
+
+### الخطوة 3: إعداد متغيرات البيئة في Render
+1. ادخل لـ Dashboard Render
+2. ادخل لخدمتك (مثلاً `sahati-medical`)
+3. من القائمة الجانبية، اختر **"Environment"**
+4. اضغط **"Add Environment Variable"**
+5. أضف هذه القيم:
+
 ```
-curl -L "https://cdn.jsdelivr.net/gh/google/fonts/ofl/tajawal/Tajawal-Regular.ttf" -o fonts/Tajawal-Regular.ttf
-curl -L "https://cdn.jsdelivr.net/gh/google/fonts/ofl/tajawal/Tajawal-Bold.ttf" -o fonts/Tajawal-Bold.ttf
+CENTER_NAME=مركز صحتي
+CENTER_FULL_NAME=مركز صحتي الطبي التخصصي
+CENTER_LICENSE=MOH-2026-887412
+CENTER_INSTITUTION=مركز طبي
+CENTER_CITY=الرياض
+DOCTOR_DEFAULT=د. أحمد الصبري
+VERIFY_BASE=https://your-app-name.onrender.com
 ```
 
-## للأمان، تحقق من أن الملفين تم تحميلهما بشكل صحيح:
+6. **اختياري - لتشغيل Cron Job**: أضف `RUN_CRON=true`
+7. **اختياري - للـ SMS عبر Taqnyat**: أضف `TAQNYAT_TOKEN=xxx` و `TAQNYAT_SENDER=xxx`
+8. **اختياري - للـ SMS عبر Twilio**: أضف `TWILIO_ACCOUNT_SID=xxx` و `TWILIO_AUTH_TOKEN=xxx` و `TWILIO_FROM_NUMBER=xxx`
 
-- يجب ألا يكون أي من الملفين **0 bytes**
-- يجب أن يكون كل منهما **≥ 100 KB** في الحجم
-- يجب أن يبدأ كل ملف بـ `0x00 0x01 0x00 0x00 0x00` (TTF magic number)
+### الخطوة 4: النشر
+- Render سيكتشف التغيير تلقائياً ويبني ويعيد النشر في 1-2 دقيقة.
+- راقب حالة النشر: تتغير من `Building` إلى `Live`.
 
-## ✅ التحقق من النجاح:
+### الخطوة 5: إضافة مجلد `fonts/` (مهم جداً!)
 
-بعد رفع الملفات إلى GitHub وبعد نشر Render:
-1. افتح صفحة التقرير في المتصفح (تعمل بدون الخطوط)
-2. اضغط على **"📥 تحميل PDF"** 
-3. إذا رأيت نصاً عربياً واضحاً في PDF = نجح كل شيء
-4. إذا رأيت مربعات □□□□ = الخطوط لم ترفع بشكل صحيح
+بسبب أن ملف `server.js` يبحث عن خطوط عربية في `./fonts/`:
 
-## في حال الفشل:
+1. حمّل ملف `Tajawal-Regular.ttf` من https://fonts.google.com/specimen/Tajawal (انقر "Download family")
+2. استخرج ZIP وانسخ الملفين فقط من داخل مجلد `static/`:
+   - `Tajawal-Regular.ttf` → ضعه في مجلد `fonts/` داخل مشروعك
+   - `Tajawal-Bold.ttf` → ضعه في مجلد `fonts/` داخل مشروعك
+3. **Commit وادفع** إلى GitHub
+4. **أعد النشر** على Render (يدوي أو دفع تلقائي)
 
-تأكد أنك رفعت ملفين منفصلين (Regular + Bold) وليس ملفاً واحداً فقط، وأنهما في **المجلد الرئيسي `fonts/`** مباشرة (ليس داخل مجلد فرعي).
+## 🧪 الاختبار
+
+1. افتح موقعك (مثال: `https://sahati-medical.onrender.com`)
+2. املأ النموذج ببيانات حقيقية (مع تجنب الكلمات مثل "test", "demo", "0000", "1234")
+3. اضغط "حفظ + توليد PDF..."
+4. اضغط زر **"📥 تحميل PDF"** لاختبار توليد PDF
+5. امسح الـ QR Code في التقرير بكاميرا جوالك لاختبار صفحة التحقق
+
+### بيانات الاختبار الموصى بها:
+- اسم المريض: أحمد محمد العتيبي
+- رقم الهوية: SA1234567
+- الجنسية: سعودي
+- اسم الطبيب: د. سامي محمد الشهري
+- رقم الترخيص: MOE-2026-54321
+
+## 🐛 استكشاف الأخطاء وإصلاحها
+
+### إذا ظهر خطأ 504 Gateway Timeout على Render:
+## أنت قلت "server.js به تضارب"
+
+- اضغط **"Manual Deploy"** في Render
+- راجع Logs للتحقق من رسالة الخطأ
+
+## أنت قلت "خطأ 504 Gateway Timeout"
+- السبب المحتمل: `VERIFY_BASE` غير معين في Render
+- أو الـ ID يحتوي على عدم تطابق معرّف
+
+## أنت قلت "لا تظهر ميزات Arabic في PDF"
+- تأكد من رفع ملف **Tajawal-Bold.ttf** وَ **Tajawal-Regular.ttf** إلى مجلد `fonts/` في GitHub
+- إذا لم تكن موجودة، ستظهر النص العربي كمربعات □□□□ في الـ PDF، لكن ستعمل باقي الميزات.
+
+## أنت قلت "لا يصل SMS"
+- تأكد من ضبط API gateway credentials بشكل صحيح في Environment
+- راجع Logs (سجلات) Render: ستجد `[NOTIFY]` أو `[SMS error]` مع سبب عدم الإرسال
 
